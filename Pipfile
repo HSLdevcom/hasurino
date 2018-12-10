@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[packages]
+docopt = "*"
+paho-mqtt = "*"
+pyyaml = "*"
+requests = "*"
+
+[dev-packages]
+hasurino = {editable = true,path = "."}
+black = "==18.9b0"
+white = "*"
+pytest = "*"
+pylint = "*"
+
+[requires]
+python_version = "3.7"
