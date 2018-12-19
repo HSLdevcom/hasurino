@@ -1,0 +1,43 @@
+---
+queue_size: 1000
+mqtt:
+  host: "mqtt.hsl.fi"
+  port: 443
+  transport: "tcp"
+  ca_certs_path: "/etc/ssl/certs/ca-certificates.crt"
+  # If commented out, do not try to authenticate with username and password.
+  username: "MY_MQTT_USERNAME"
+  # If commented out, do not try to authenticate with username and password.
+  password: "MY_MQTT_PASSWORD"
+  clean_session: false
+  qos: 2
+  client_id: "MY_HASURINO_CLIENT_ID"
+  topic: "/hfp/v1/journey/ongoing/#"
+  reconnect_min_delay_in_s: 1
+  reconnect_max_delay_in_s: 10
+  max_inflight_messages: 1000
+processor:
+  max_cache_length_per_vehicle: 1800  # 1 msg/s * 60 s/min * 30 min
+  max_messages_in_bundle: 1000  # Roughly once per second.
+graphql:
+  hasura-access-key: "MY_SECRET_ACCESS_KEY"
+  endpoint: "https://MY_HASURA.foo/GRAPHQL/ENDPOINT"
+logging:
+  version: 1
+  formatters:
+    utc:
+      (): "hasurino.utcformatter.UTCFormatter"
+      format: "%(asctime)s.%(msecs)03dZ %(name)s: %(levelname)s: %(message)s"
+      datefmt: "%Y-%m-%dT%H:%M:%S"
+  handlers:
+    console:
+      class: "logging.StreamHandler"
+      formatter: "utc"
+  root:
+    handlers:
+      - "console"
+    level: "WARNING"
+  disable_existing_loggers: false
+  loggers:
+    paho.mqtt.client:
+      level: "INFO"
