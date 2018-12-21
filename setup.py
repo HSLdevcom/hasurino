@@ -18,7 +18,7 @@ setup(
     version="0.0.1",
     description="Forward HFP MQTT messages into transitlog GraphQL API.",
     long_description=long_description,
-    url="https://github.com/hsldevcom/hasurino",
+    url="https://github.com/HSLdevcom/hasurino",
     author="haphut",
     author_email="haphut@gmail.com",
     license="EUPL-1.2",
