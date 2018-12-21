@@ -4,9 +4,7 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir pipenv
 
-COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy
 COPY . ./
-RUN pip install -e .
+RUN pipenv install --dev --system --deploy
 
 ENTRYPOINT ["hasurino"]
