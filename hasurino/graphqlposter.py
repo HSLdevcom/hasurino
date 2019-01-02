@@ -31,10 +31,14 @@ def create_graphql_poster(config, queue):
     def post_until_success(payload):
         is_success = False
         while not is_success:
-            response = requests.post(
-                config["endpoint"], data=payload, headers=headers
-            )
-            if response.ok:
+            try:
+                response = requests.post(
+                    config["endpoint"],
+                    data=payload,
+                    headers=headers,
+                    timeout=config["request_timeout_in_seconds"],
+                )
+                response.raise_for_status()
                 is_success = True
                 result = response.json()
                 if "data" in result and result["data"]:
@@ -54,8 +58,12 @@ def create_graphql_poster(config, queue):
                         "Unexpected but successful response for GraphQL mutation: %s",
                         str(response.json()),
                     )
-            else:
-                LOG.warning("POST request failed: %s", str(response.json()))
+            except requests.exceptions.RequestException as err:
+                LOG.warning(
+                    "POST request failed with exception %s and response content %s",
+                    str(err),
+                    str(response.content),
+                )
                 time.sleep(1)
 
     return keep_posting

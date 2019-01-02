@@ -22,6 +22,7 @@ processor:
 graphql:
   hasura_access_key: "MY_SECRET_ACCESS_KEY"
   endpoint: "https://MY_HASURA.foo/GRAPHQL/ENDPOINT"
+  request_timeout_in_seconds: 30
 logging:
   version: 1
   formatters:
