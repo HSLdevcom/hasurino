@@ -15,7 +15,7 @@ def create_graphql_poster(config, queue):
     """Create a GraphQL poster."""
 
     headers = {
-        "X-Hasura-Access-Key": config["hasura-access-key"],
+        "X-Hasura-Access-Key": config["hasura_access_key"],
         "Content-Type": "application/json",
     }
 

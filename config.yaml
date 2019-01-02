@@ -20,7 +20,7 @@ processor:
   max_cache_length_per_vehicle: 1800  # 1 msg/s * 60 s/min * 30 min
   max_messages_in_bundle: 1000  # Roughly once per second.
 graphql:
-  hasura-access-key: "MY_SECRET_ACCESS_KEY"
+  hasura_access_key: "MY_SECRET_ACCESS_KEY"
   endpoint: "https://MY_HASURA.foo/GRAPHQL/ENDPOINT"
 logging:
   version: 1
