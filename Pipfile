@@ -15,6 +15,7 @@ black = "==18.9b0"
 white = "*"
 pytest = "*"
 pylint = "*"
+requests-mock = "*"
 
 [requires]
 python_version = "3.7"
