@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Test checking for duplicate MQTT messages."""
 
-import queue
-
 from hasurino import duplicatechecker
 
 
