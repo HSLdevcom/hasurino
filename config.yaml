@@ -1,5 +1,7 @@
 ---
 queue_size: 3000
+poison_pill_timeout_in_seconds: 2
+thread_join_timeout_in_seconds: 5
 mqtt:
   host: "mqtt.hsl.fi"
   port: 443
@@ -23,6 +25,7 @@ graphql:
   hasura_access_key: "MY_SECRET_ACCESS_KEY"
   endpoint: "https://MY_HASURA.foo/GRAPHQL/ENDPOINT"
   request_timeout_in_seconds: 30
+  repost_wait_in_seconds: 1
 logging:
   version: 1
   formatters:

@@ -47,7 +47,11 @@ def create_mqtt_subscriber(config, queue):
 
     def on_message(client, userdata, message):
         received_at = datetime.utcnow().isoformat(sep="T", timespec="auto")
-        queue.put((received_at, message.topic, message.payload))
+        queue.put(
+            (received_at, message.topic, message.payload),
+            block=True,
+            timeout=None,
+        )
 
     client = mqtt.Client(
         client_id=config["client_id"],

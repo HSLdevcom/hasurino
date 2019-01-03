@@ -49,42 +49,69 @@ def run(config, logger):
     """Run the top-level functionality."""
     hfp_queue = queue.Queue(maxsize=config["queue_size"])
     graphql_queue = queue.Queue(maxsize=1)
+    err_queue = queue.Queue(maxsize=2)
 
     poster_thread = threading.Thread(
         target=graphqlposter.create_graphql_poster(
-            config=config["graphql"], queue=graphql_queue
+            config=config["graphql"],
+            payload_queue=graphql_queue,
+            err_queue=err_queue,
         ),
         name="Thread-poster",
+        daemon=True,
     )
     processor_thread = threading.Thread(
         target=processor.create_processor(
             config=config["processor"],
             in_queue=hfp_queue,
             out_queue=graphql_queue,
+            err_queue=err_queue,
         ),
         name="Thread-processor",
+        daemon=True,
     )
     subscriber = mqttsubscriber.create_mqtt_subscriber(
         config=config["mqtt"], queue=hfp_queue
     )
 
+    logger.info("Starting GraphQL poster thread")
+    poster_thread.start()
+    logger.info("Starting processor thread")
+    processor_thread.start()
+    logger.info("Starting MQTT subscriber")
+    subscriber.loop_start()
+
+    err = err_queue.get(block=True, timeout=None)
+    logger.error("Fatal error %s", err)
+
+    logger.info("Stopping MQTT subscriber")
+    subscriber.loop_stop()
+
+    logger.info("Stopping processor")
     try:
-        logger.info("Starting GraphQL poster thread")
-        poster_thread.start()
-        logger.info("Starting processor thread")
-        processor_thread.start()
-        logger.info("Starting MQTT subscriber")
-        subscriber.loop_start()
-    except RuntimeError as err:
-        logger.error("Fatal failure: %s", str(err))
-        logger.info("Stopping MQTT subscriber")
-        subscriber.loop_stop()
-        logger.info("Stopping processor")
-        hfp_queue.put(poisonpill.POISON_PILL)
-        processor_thread.join()
-        logger.info("Stopping GraphQL poster")
-        graphql_queue.put(poisonpill.POISON_PILL)
-        poster_thread.join()
+        hfp_queue.put(
+            poisonpill.POISON_PILL,
+            block=True,
+            timeout=config["poison_pill_timeout_in_seconds"],
+        )
+    except queue.Full:
+        pass
+    processor_thread.join(config["thread_join_timeout_in_seconds"])
+    if processor_thread.is_alive():
+        logger.warning("processor_thread did not terminate before timeout")
+
+    logger.info("Stopping GraphQL poster")
+    try:
+        graphql_queue.put(
+            poisonpill.POISON_PILL,
+            block=True,
+            timeout=config["poison_pill_timeout_in_seconds"],
+        )
+    except queue.Full:
+        pass
+    poster_thread.join(config["thread_join_timeout_in_seconds"])
+    if poster_thread.is_alive():
+        logger.warning("poster_thread did not terminate before timeout")
 
 
 if __name__ == "__main__":
