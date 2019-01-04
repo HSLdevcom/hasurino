@@ -48,6 +48,10 @@ def create_parser(config):
             owner_operator_id,
             vehicle_number,
         ] = parts[version_index:common_end_index]
+        # There is a Fara VPC bug where the mode is sometimes missing. Let's
+        # forward such cases as GraphQL nulls.
+        if mode == "":
+            mode = None
         unique_vehicle_id = owner_operator_id + "/" + vehicle_number
         is_ongoing = False
         if temporal_type == "ongoing":
