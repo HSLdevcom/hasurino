@@ -7,18 +7,17 @@ Usage
 *****
 
 An example usage:
-```sh
-cp config.yaml my_config.yaml
+.. code:: sh
+   cp config.yaml my_config.yaml
 
-# Modify the configuration to match your needs. The suggested values in
-# config.yaml are quite sensible for HFP messages.
-vim my_config.yaml
+   # Modify the configuration to match your needs. The suggested values in
+   # config.yaml are quite sensible for HFP messages.
+   vim my_config.yaml
 
-docker run \
-  -v ./my_config.yaml:/my_config.yaml \
-  hsldevcom/hasurino:latest \
-  /my_config.yaml
-```
+   docker run \
+     -v ./my_config.yaml:/my_config.yaml \
+     hsldevcom/hasurino:latest \
+     /my_config.yaml
 
 A configuration file is necessary.
 There are no other ways to configure hasurino.
