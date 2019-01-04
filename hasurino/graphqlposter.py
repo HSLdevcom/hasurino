@@ -32,7 +32,7 @@ def create_graphql_poster(config, payload_queue, err_queue):
             err_queue.put(err, block=True, timeout=None)
 
     def post_until_success(payload):
-        while True:
+        for _i in range(config["number_of_retries"]):
             if post(
                 config["endpoint"],
                 headers,

@@ -26,6 +26,7 @@ graphql:
   endpoint: "https://MY_HASURA.foo/GRAPHQL/ENDPOINT"
   request_timeout_in_seconds: 30
   repost_wait_in_seconds: 1
+  number_of_retries: 3
 logging:
   version: 1
   formatters:

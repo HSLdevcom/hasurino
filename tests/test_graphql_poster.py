@@ -21,6 +21,7 @@ def test_exit_on_poison_pill():
         "endpoint": "https://foo.com",
         "request_timeout_in_seconds": 3,
         "repost_wait_in_seconds": 1,
+        "number_of_retries": 3,
     }
     keep_posting = graphqlposter.create_graphql_poster(
         config=config, payload_queue=out_queue, err_queue=err_queue
@@ -44,6 +45,7 @@ def test_log_warning_on_http_error():
         "endpoint": "https://foo.com",
         "request_timeout_in_seconds": 3,
         "repost_wait_in_seconds": 1,
+        "number_of_retries": 3,
     }
     headers = {
         "X-Hasura-Access-Key": config["hasura_access_key"],
@@ -68,6 +70,7 @@ def test_log_warning_on_timeout():
         "endpoint": "https://foo.com",
         "request_timeout_in_seconds": 3,
         "repost_wait_in_seconds": 1,
+        "number_of_retries": 3,
     }
     headers = {
         "X-Hasura-Access-Key": config["hasura_access_key"],
@@ -93,6 +96,7 @@ def test_log_warning_on_weird_response():
         "endpoint": "https://foo.com",
         "request_timeout_in_seconds": 3,
         "repost_wait_in_seconds": 1,
+        "number_of_retries": 3,
     }
     headers = {
         "X-Hasura-Access-Key": config["hasura_access_key"],
@@ -117,6 +121,7 @@ def test_log_debug_on_expected_response():
         "endpoint": "https://foo.com",
         "request_timeout_in_seconds": 3,
         "repost_wait_in_seconds": 1,
+        "number_of_retries": 3,
     }
     headers = {
         "X-Hasura-Access-Key": config["hasura_access_key"],
@@ -134,3 +139,27 @@ def test_log_debug_on_expected_response():
                 payload="foo",
             )
             mock_debug.assert_called_once()
+
+
+def test_try_posting_specified_times():
+    out_queue = queue.Queue()
+    err_queue = queue.Queue()
+    config = {
+        "hasura_access_key": "bar",
+        "endpoint": "https://foo.com",
+        "request_timeout_in_seconds": 3,
+        "repost_wait_in_seconds": 0.1,
+        "number_of_retries": 3,
+    }
+    keep_posting = graphqlposter.create_graphql_poster(
+        config=config, payload_queue=out_queue, err_queue=err_queue
+    )
+    logger = logging.getLogger("hasurino.graphqlposter")
+    with unittest.mock.patch.object(logger, "warning") as mock_warning:
+        with requests_mock.mock() as m:
+            m.post(requests_mock.ANY, json={}, status_code=400)
+
+            out_queue.put("foo")
+            out_queue.put(poisonpill.POISON_PILL)
+            keep_posting()
+            assert mock_warning.call_count == 3
