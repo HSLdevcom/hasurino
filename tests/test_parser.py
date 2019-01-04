@@ -87,3 +87,53 @@ def test_parser():
 
     assert parse(input1) == result1
     assert parse(input2) == result2
+
+
+def test_missing_mode():
+    parse = parser.create_parser({})
+
+    input1 = (
+        "2019-01-04T05:31:50.470897Z",
+        "/hfp/v1/journey/ongoing//0022/01093/1086/2/Herttoniemi(M)/07:34/1510107/5/60;25/10/43/59",
+        '{"VP":{"desi":"86","dir":"2","oper":22,"veh":1093,"tst":"2019-01-04T05:31:19Z","tsi":1546579879,"spd":0.00,"hdg":7,"lat":60.145912,"long":25.039642,"acc":0.00,"dl":180,"odo":35,"drst":1,"oday":"2019-01-04","jrn":78,"line":120,"start":"07:34"}}',
+    )
+
+    result1 = {
+        "received_at": "2019-01-04T05:31:50.470897Z",
+        "topic_prefix": "/hfp/",
+        "topic_version": "v1",
+        "journey_type": "journey",
+        "is_ongoing": True,
+        "mode": None,
+        "owner_operator_id": "0022",
+        "vehicle_number": "01093",
+        "unique_vehicle_id": "0022/01093",
+        "route_id": "1086",
+        "direction_id": "2",
+        "headsign": "Herttoniemi(M)",
+        "journey_start_time": "07:34",
+        "next_stop_id": "1510107",
+        "geohash_level": "5",
+        "topic_latitude": 60.145,
+        "topic_longitude": 25.039,
+        "desi": "86",
+        "dir": "2",
+        "oper": 22,
+        "veh": 1093,
+        "tst": "2019-01-04T05:31:19Z",
+        "tsi": 1546579879,
+        "spd": 0.00,
+        "hdg": 7,
+        "lat": 60.145912,
+        "long": 25.039642,
+        "acc": 0.00,
+        "dl": 180,
+        "odo": 35,
+        "drst": 1,
+        "oday": "2019-01-04",
+        "jrn": 78,
+        "line": 120,
+        "start": "07:34",
+    }
+
+    assert parse(input1) == result1
