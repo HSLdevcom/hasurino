@@ -7,6 +7,7 @@ Usage
 *****
 
 An example usage:
+
 .. code:: sh
    cp config.yaml my_config.yaml
 
