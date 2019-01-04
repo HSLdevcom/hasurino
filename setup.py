@@ -15,7 +15,7 @@ with open(path.join(here, "README.rst"), encoding="utf-8") as f:
 
 setup(
     name="hasurino",
-    version="0.1.2",
+    version="0.1.3",
     description="Forward HFP MQTT messages into transitlog GraphQL API.",
     long_description=long_description,
     url="https://github.com/HSLdevcom/hasurino",
