@@ -9,6 +9,7 @@ Usage
 An example usage:
 
 .. code:: sh
+
    cp config.yaml my_config.yaml
 
    # Modify the configuration to match your needs. The suggested values in
