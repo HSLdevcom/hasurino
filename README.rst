@@ -1,3 +1,8 @@
+⚠ ARCHIVED
+^^^^^^^^^^
+
+This repository is archived and read-only. For active development, go to `Transitlog <https://github.com/HSLdevcom/transitlog>`_.
+
 hasurino
 ^^^^^^^^
 
