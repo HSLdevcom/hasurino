@@ -33,7 +33,7 @@ setup(
     install_requires=[
         "docopt>=0.6.0,<0.7.0",
         "paho-mqtt>=1.4.0,<2.0.0",
-        "pyyaml>=3.13,<4.0",
+        "pyyaml>=3.13,<6.0",
         "requests>=2.21.0,<3.0.0",
     ],
     data_files=[("", ["LICENSE"])],
